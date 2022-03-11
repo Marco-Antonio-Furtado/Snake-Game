@@ -1,0 +1,8 @@
+.food {
+  position: absolute;
+  height: 5%;
+  width: 5%;
+  background-color: rgb(228, 77, 77);
+  box-sizing: border-box;
+  border: solid black 0.2rem;
+}
