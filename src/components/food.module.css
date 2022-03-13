@@ -1,8 +1,9 @@
 .food {
   position: absolute;
-  height: 5%;
-  width: 5%;
+  height: 4%;
+  width: 4%;
   background-color: rgb(228, 77, 77);
   box-sizing: border-box;
+  margin: 0.2rem;
   border: solid black 0.2rem;
 }

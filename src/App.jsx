@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import style from "./App.module.css";
 import Snake from "./components/snake";
 import Food from "./components/food";
 
 export default function App() {
+  const gameArea = useRef();
+
   const [direction, setDirection] = useState("RIGHT");
 
   useEffect(() => {
     console.log(direction);
+    gameArea.current.focus();
   }, [direction]);
 
   const [snakeDots, setSnakeDots] = useState([
@@ -52,6 +55,7 @@ export default function App() {
     <div
       className={style.gameArea}
       tabIndex="0"
+      ref={gameArea}
       onKeyDown={(e) => {
         changeDirection(e);
       }}
