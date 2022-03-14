@@ -17,17 +17,16 @@ export default function App() {
     top: randomNumber(),
   });
   const [counter, setCounter] = useState(0);
-  const [speed, setSpeed] = useState(200);
 
   setTimeout(() => {
     setCounter(counter + 1);
-  }, 100 + speed);
+  }, 200);
 
   useEffect(() => {
     gameArea.current.focus();
     moveSnake();
     checkIfEaten();
-  }, [direction, counter]);
+  }, [counter]);
 
   function randomNumber() {
     const min = 0;
@@ -41,16 +40,24 @@ export default function App() {
   function changeDirection(e) {
     switch (e.keyCode) {
       case 37:
-        setDirection("LEFT");
+        if (direction !== "RIGHT") {
+          setDirection("LEFT");
+        }
         break;
       case 38:
-        setDirection("UP");
+        if (direction !== "DOWN") {
+          setDirection("UP");
+        }
         break;
       case 39:
-        setDirection("RIGHT");
+        if (direction !== "LEFT") {
+          setDirection("RIGHT");
+        }
         break;
       case 40:
-        setDirection("DOWN");
+        if (direction !== "UP") {
+          setDirection("DOWN");
+        }
         break;
       default:
         setDirection("RIGHT");
@@ -63,7 +70,6 @@ export default function App() {
     if (replay === true) {
       setSnakeDots(INITIAL_VALUE);
       setDirection("RIGHT");
-      setSpeed(200);
     }
   }
 
@@ -98,16 +104,22 @@ export default function App() {
     }
   }
 
+  function enlargeSnake() {
+    let newSnake = snakeDots;
+    newSnake.unshift({});
+    setSnakeDots(newSnake);
+  }
+
   function checkIfEaten() {
     let dots = [...snakeDots];
     let head = dots[dots.length - 1];
 
     if (head.left === foodPosition.left && head.top === foodPosition.top) {
-      setSpeed(speed - 10);
       setFoodPosition({
         left: randomNumber(),
         top: randomNumber(),
       });
+      enlargeSnake();
     }
   }
 
