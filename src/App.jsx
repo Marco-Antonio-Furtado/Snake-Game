@@ -17,10 +17,11 @@ export default function App() {
     top: randomNumber(),
   });
   const [counter, setCounter] = useState(0);
+  const [speed, setSpeed] = useState(200);
 
   setTimeout(() => {
     setCounter(counter + 1);
-  }, 200);
+  }, 100 + speed);
 
   useEffect(() => {
     gameArea.current.focus();
@@ -30,7 +31,7 @@ export default function App() {
 
   function randomNumber() {
     const min = 0;
-    const max = 100;
+    const max = 95;
     const multiple = 5;
     const randomNumber =
       Math.floor((Math.random() * (max - min + 1) + min) / multiple) * multiple;
@@ -62,8 +63,7 @@ export default function App() {
     if (replay === true) {
       setSnakeDots(INITIAL_VALUE);
       setDirection("RIGHT");
-    } else {
-      window.close();
+      setSpeed(200);
     }
   }
 
@@ -84,6 +84,9 @@ export default function App() {
       case "UP":
         head = { left: head.left, top: head.top - 5 };
         break;
+      default:
+        head = { left: head.left + 5, top: head.top };
+        break;
     }
 
     dots.push(head);
@@ -99,7 +102,8 @@ export default function App() {
     let dots = [...snakeDots];
     let head = dots[dots.length - 1];
 
-    if (head.left == foodPosition.left && head.top == foodPosition.top) {
+    if (head.left === foodPosition.left && head.top === foodPosition.top) {
+      setSpeed(speed - 10);
       setFoodPosition({
         left: randomNumber(),
         top: randomNumber(),
