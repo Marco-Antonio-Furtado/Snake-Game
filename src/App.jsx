@@ -5,19 +5,27 @@ import Food from "./components/food";
 
 export default function App() {
   const gameArea = useRef();
-
   const [direction, setDirection] = useState("RIGHT");
-
-  useEffect(() => {
-    console.log(direction);
-    gameArea.current.focus();
-  }, [direction]);
-
   const [snakeDots, setSnakeDots] = useState([
     { left: 0, top: 0 },
     { left: 5, top: 0 },
     { left: 10, top: 0 },
   ]);
+  const [position] = useState({
+    left: randomNumber(),
+    top: randomNumber(),
+  });
+  const [counter, setCounter] = useState(0);
+
+  setTimeout(() => {
+    setCounter(counter + 1);
+  }, 50000);
+
+  useEffect(() => {
+    console.log(direction);
+    gameArea.current.focus();
+    moveSnake();
+  }, [direction, counter]);
 
   function randomNumber() {
     const min = 0;
@@ -28,27 +36,47 @@ export default function App() {
     return randomNumber;
   }
 
-  const [position, setPosition] = useState({
-    left: randomNumber(),
-    top: randomNumber(),
-  });
-
   function changeDirection(e) {
-    e = e || window.event;
     switch (e.keyCode) {
-      case 38:
-        setDirection("UP");
-        break;
-      case 40:
-        setDirection("DOWN");
-        break;
       case 37:
         setDirection("LEFT");
+        break;
+      case 38:
+        setDirection("UP");
         break;
       case 39:
         setDirection("RIGHT");
         break;
+      case 40:
+        setDirection("DOWN");
+        break;
+      default:
+        setDirection("RIGHT");
+        break;
     }
+  }
+
+  function moveSnake() {
+    let dots = [...snakeDots];
+    let head = dots[dots.length - 1];
+
+    switch (direction) {
+      case "RIGHT":
+        head = { left: head.left + 5, top: head.top };
+        break;
+      case "LEFT":
+        head = { left: head.left - 5, top: head.top };
+        break;
+      case "DOWN":
+        head = { left: head.left, top: head.top + 5 };
+        break;
+      case "UP":
+        head = { left: head.left, top: head.top - 5 };
+        break;
+    }
+    dots.push(head);
+    dots.shift();
+    setSnakeDots(dots);
   }
 
   return (
