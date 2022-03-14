@@ -4,15 +4,15 @@ import Snake from "./components/snake";
 import Food from "./components/food";
 
 export default function App() {
-  const gameArea = useRef();
-  const [direction, setDirection] = useState("RIGHT");
   const INITIAL_VALUE = [
     { left: 0, top: 0 },
     { left: 5, top: 0 },
     { left: 10, top: 0 },
   ];
+  const gameArea = useRef();
+  const [direction, setDirection] = useState("RIGHT");
   const [snakeDots, setSnakeDots] = useState(INITIAL_VALUE);
-  const [foodPosition] = useState({
+  const [foodPosition, setFoodPosition] = useState({
     left: randomNumber(),
     top: randomNumber(),
   });
@@ -25,6 +25,7 @@ export default function App() {
   useEffect(() => {
     gameArea.current.focus();
     moveSnake();
+    checkIfEaten();
   }, [direction, counter]);
 
   function randomNumber() {
@@ -56,6 +57,16 @@ export default function App() {
     }
   }
 
+  function gameOver() {
+    let replay = window.confirm("Do you want to play again?");
+    if (replay === true) {
+      setSnakeDots(INITIAL_VALUE);
+      setDirection("RIGHT");
+    } else {
+      window.close();
+    }
+  }
+
   function moveSnake() {
     let dots = [...snakeDots];
     let head = dots[dots.length - 1];
@@ -80,13 +91,19 @@ export default function App() {
     setSnakeDots(dots);
 
     if (head.left < 0 || head.left > 95 || head.top < 0 || head.top > 95) {
-      let replay = window.confirm("Quer Jogar denovo?");
-      if (replay === true) {
-        setSnakeDots(INITIAL_VALUE);
-        setDirection("RIGHT");
-      } else {
-        window.close();
-      }
+      gameOver();
+    }
+  }
+
+  function checkIfEaten() {
+    let dots = [...snakeDots];
+    let head = dots[dots.length - 1];
+
+    if (head.left == foodPosition.left && head.top == foodPosition.top) {
+      setFoodPosition({
+        left: randomNumber(),
+        top: randomNumber(),
+      });
     }
   }
 
