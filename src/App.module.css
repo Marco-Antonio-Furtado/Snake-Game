@@ -2,6 +2,7 @@
   position: relative;
   width: 100vmin;
   height: 100vmin;
+  box-sizing: border-box;
   background-color: #ccc;
   outline: none;
 }

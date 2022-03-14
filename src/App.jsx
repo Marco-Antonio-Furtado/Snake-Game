@@ -6,12 +6,13 @@ import Food from "./components/food";
 export default function App() {
   const gameArea = useRef();
   const [direction, setDirection] = useState("RIGHT");
-  const [snakeDots, setSnakeDots] = useState([
+  const INITIAL_VALUE = [
     { left: 0, top: 0 },
     { left: 5, top: 0 },
     { left: 10, top: 0 },
-  ]);
-  const [position] = useState({
+  ];
+  const [snakeDots, setSnakeDots] = useState(INITIAL_VALUE);
+  const [foodPosition] = useState({
     left: randomNumber(),
     top: randomNumber(),
   });
@@ -19,10 +20,9 @@ export default function App() {
 
   setTimeout(() => {
     setCounter(counter + 1);
-  }, 50000);
+  }, 200);
 
   useEffect(() => {
-    console.log(direction);
     gameArea.current.focus();
     moveSnake();
   }, [direction, counter]);
@@ -74,9 +74,20 @@ export default function App() {
         head = { left: head.left, top: head.top - 5 };
         break;
     }
+
     dots.push(head);
     dots.shift();
     setSnakeDots(dots);
+
+    if (head.left < 0 || head.left > 95 || head.top < 0 || head.top > 95) {
+      let replay = window.confirm("Quer Jogar denovo?");
+      if (replay === true) {
+        setSnakeDots(INITIAL_VALUE);
+        setDirection("RIGHT");
+      } else {
+        window.close();
+      }
+    }
   }
 
   return (
@@ -89,7 +100,7 @@ export default function App() {
       }}
     >
       <Snake snakeDots={snakeDots}></Snake>
-      <Food position={position} />
+      <Food position={foodPosition} />
     </div>
   );
 }
